@@ -1,0 +1,174 @@
+/* Add this to your existing CSS file or create a new one
+.pink-background {
+    background-color: rgb(247, 200, 208);
+} */
+/* .pink-background {
+    background-color: #DF6F0F1; /* Replace with your desired earth color tone } */
+
+.pink-background {
+    background-color: #F6F0F1;}
+
+.bi-cart3 {
+    color: black;
+}
+.bi-calendar-check {
+    color: black;
+}
+.product-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-radius: 5px;
+    margin: 10px;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+}
+
+/* .quantity-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    cursor: pointer;
+    margin: 0;
+    transition: background-color 0.3s;
+}  */
+
+
+.quantity-button:hover {
+    background-color: #0056b3;
+}
+
+.quantity-display {
+    font-size: 20px;
+    margin: 0 10px;
+}
+
+.add-to-cart-button {
+    width: 120px;
+    margin-top: 10px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+}
+
+.add-to-cart-button:hover {
+    background-color: #218838;
+}
+
+.navbar {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    /* You can adjust the font size as needed for responsiveness */
+}
+
+.navbar-nav {
+    font-size: 1rem;
+    /* You can adjust the font size as needed for responsiveness */
+}
+/* .navbar-pink {
+    background-color: rgb(238, 218, 221);
+} */
+@media (max-width: 768px) {
+    /* Hide the cart button on screens with a maximum width of 768px (typical mobile devices) */
+    .cart-button {
+        display: none;
+    }
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
+
+
+/* space for front-end */
+
+.nav-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+}
+
+.nav-item {
+    margin-right: 20px; /* Add space between items */
+}
+
+.nav-link {
+    position: relative;
+    text-decoration: none;
+    color: #333; /* Change the color as needed */
+}
+
+.nav-link::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    bottom: 0;
+    left: 0;
+    background-color: transparent;
+    transform-origin: bottom right;
+    transform: scaleX(0);
+    transition: transform 0.3s ease-out, background-color 0.3s ease-out;
+}
+
+.nav-link:hover::before {
+    transform-origin: bottom left;
+    transform: scaleX(1);
+    background-color: #000000; /* Change the color as needed */
+}
+
+.bg-custom {
+    background-color: #F0E4D8;
+
+}
+.custom-modal-header {
+    background-color: #F0E4D8 ;
+}
+.custom-input {
+    background-color: #F6F0F1;
+    border: 1px solid #ccc; /* Optional: Add a border for better visibility */
+    border-radius: 4px; /* Adjust the corner radius for a softer appearance */
+    padding: 5px; /* Adjust padding for better spacing */
+
+}
+.custom-select {
+    background-color: #F6F0F1;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px;
+    width: 100px;
+    /* Add more styling properties if needed */
+}
+/* Set the size of the logo */
+.navbar-brand img {
+    width: 10%; /* Adjust the width as needed */
+    height: 5%; /* Maintain aspect ratio */
+}
+
+
+
+
+
+
+

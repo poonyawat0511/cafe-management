@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cafe List</title>
+    <link rel="stylesheet" href="app.css" />
+    <!-- Add Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <!-- Add Bootstrap CSS and JavaScript -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+
+<body class=" pink-background">
+    <!-- navbar bg-light-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-custom fixed-top">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <a class="navbar-brand" href="#"><img src="images/Final1.png"></a>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" id="cartButtonLarge" type="button" data-toggle="modal"
+                            data-target="#cartModal">Cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="Status" type="button" data-toggle="modal"
+                            data-target="#status">Receipt</a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{/user}" class="nav-link">All</a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{/user-search-tea}" class="nav-link">Tea</a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{/user-search-coffee}" class="nav-link">Coffee</a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{/user-search-smoothie}" class="nav-link">Smoothie</a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{/user-search-dessert}" class="nav-link">Dessert</a>
+                    </li>
+
+            </div>
+            <!-- search bar -->
+            <div>
+                <form th:action="@{/user}" method="get" class="d-flex">
+                    <div class="input-group">
+                        <input type="text" id="text-search" name="keyword" class="form-control" placeholder="search...">
+                        <button type="submit" class="btn btn-dark">Search</button>
+                    </div>
+                </form>
+            </div>
+            <!-- end of search bar -->
+            <!-- Button to open order status  (separately on large screens) -->
+            <button th:id="statusButtonLarge" type="button" class="btn btn-link ml-auto d-none d-lg-inline"
+                data-toggle="modal" data-target="#status">
+                <i class="bi bi-calendar-check"></i>
+            </button>
+            <!-- Button to open the cart modal (separately on large screens) -->
+            <button id="cartButtonLarge" type="button" class="btn btn-link ml-auto d-none d-lg-inline"
+                data-toggle="modal" data-target="#cartModal">
+                <i class="bi bi-cart3"></i>
+            </button>
+    </nav>
+    <!-- end of navbar -->
+    <div>
+        <!-- Cart Modal -->
+        <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #F0E4D8;">
+                        <h5 class="modal-title" id="cartModalLabel">Your Cart</h5>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"></span>
+                        </button>
+
+
+
+                    </div>
+                    <div class="modal-body" style="background-color: #F6F0F1;">
+                        <!-- Add your cart content here -->
+                        <div class="container" id="Cart">
+                            <h1 class="mt-1">Your Cart List</h1>
+                            <table class="table">
+                                <tr>
+                                    <th>Amount</th>
+                                    <th>Menu</th>
+                                    <th>Note</th>
+                                </tr>
+                                <tr th:each="InvoiceItem : ${invoiceitem}">
+                                    <td th:text="${InvoiceItem.dishAmount}"></td>
+                                    <td th:text="${InvoiceItem.dishes.dish_name}"></td>
+                                    <td th:text="${InvoiceItem.itemNote}"></td>
+                                    <td>
+                                        <a th:href="@{/delete-cart/{id}(id=${InvoiceItem.id})}"
+                                            class="btn btn-dark mt-3 mb-3">Delete</a>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="modal-footer">
+                                <form action="/confirm_cart" method="post">
+                                    <label for="invoiceNote"><b>Note To Staff : </b></label>
+                                    <input type="text" id="invoiceNote" name="invoiceNote" class="custom-input">
+                                    <label for="tableNumber"><b>Select Table Number : </b></label>
+                                    <select id="tableNumber" name="tableNumber" required="" class="custom-select">
+                                        <option value="1">Table 1</option>
+                                        <option value="2">Table 2</option>
+                                        <option value="3">Table 3</option>
+                                        <option value="4">Table 4</option>
+                                        <option value="5">Table 5</option>
+                                    </select>
+                                    <button class="btn btn-dark mt-3 mb-3" type="submit">Confirm</button>
+                                </form>
+                            </div>
+                            <div id="cart-notification" class="alert alert-success" role="alert" style="display: none;">
+                                Dishes has been added to your cart.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </ul>
+            </div>
+        </div>
+
+        <!--show dishes list-->
+        <div>
+            <h1></h1>
+        </div>
+        <div class="container" id="Menu">
+            <!--menu botton-->
+            <!-- <a th:href="@{/user}" class="btn btn-primary mt-3 mb-3">All</a>
+            <a th:href="@{/user-search-tea}" class="btn btn-primary mt-3 mb-3">Tea</a>
+            <a th:href="@{/user-search-coffee}" class="btn btn-primary mt-3 mb-3">Coffee</a>
+            <a th:href="@{/user-search-smoothie}" class="btn btn-primary mt-3 mb-3">Smoothie</a>
+            <a th:href="@{/user-search-dessert}" class="btn btn-primary mt-3 mb-3">Dessert</a> -->
+
+            <!--show top 3 dishes-->
+            <div th:if="${top3dishes != null}">
+                <br>
+                <h1 class="mt-5">Best seller</h1>
+                <table class="table">
+                    <tr>
+
+
+                        <th>Picture</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Select</th>
+                    </tr>
+                    <!--show list in sql and new add list-->
+                    <tr th:each="Dishes : ${top3dishes}">
+
+
+                        <td>
+                            <img th:src="@{'images/' + ${Dishes.dish_picture}}" alt="Dish Image" class="center" />
+                        </td>
+                        <td th:text="${Dishes.dish_name}"></td>
+                        <td th:text="${Dishes.dish_price}"></td>
+                        <td>
+                            <button id="selectionCartButton" class="btn btn-dark" type="button" data-toggle="modal"
+                                th:attr="data-target='#p'+ ${Dishes.id}">Select</button>
+                        </td>
+                    </tr>
+                </table>
+                <table>
+                    <form action="#" th:action="@{/add-to-cart/{id}}" modelAttributes="newinvoiceitem" method="post">
+                        <form:input path="dish_name" value="1" type="text" />
+                    </form>
+                </table>
+            </div>
+
+
+            <!--show dishes list-->
+            <br>
+            <h1 class="mt-5">Menu List</h1>
+            <table class="table">
+                <tr>
+
+
+                    <th>Picture</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>select</th>
+                </tr>
+                <!--show list in sql and new add list-->
+                <tr th:each="Dishes : ${dishes}">
+
+
+                    <td>
+                        <img th:src="@{'images/' + ${Dishes.dish_picture}}" alt="Dish Image" class="center" />
+                    </td>
+                    <td th:text="${Dishes.dish_name}"></td>
+                    <td th:text="${Dishes.dish_price}"></td>
+
+                    <td>
+                        <button id="selectionCartButton" class="btn btn-dark" type="button" data-toggle="modal"
+                            th:attr="data-target='#p'+ ${Dishes.id}">Select</button>
+                    </td>
+
+
+            </table>
+            <table>
+                <form action="#" th:action="@{/add-to-cart/{id}}" modelAttributes="newinvoiceitem" method="post">
+                    <form:input path="dish_name" value="1" type="text" />
+                </form>
+            </table>
+        </div>
+        <!-- Selection Cart Modal -->
+        <div th:each="Dishes : ${dishes}">
+            <div class="modal fade" th:id="'p'+ ${Dishes.id}" tabindex="-1" role="dialog"
+                aria-labelledby="selectionCartLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="selectionCartLabel" th:text="${Dishes.dish_name}"></h5>
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true"></span>
+                            </button>
+
+
+
+
+                        </div>
+                        <div class="modal-body">
+                            <!-- Add your cart content here -->
+                            <div class="container" id="Cart">
+
+                                <form th:action="@{'/add-to-cart/' + ${Dishes.id}}" method="post" class="product-form">
+                                    <td>
+                                        <img th:src="@{'images/' + ${Dishes.dish_picture}}" alt="Dish Image"
+                                            class="center" />
+                                    </td>
+                                    <td>
+                                        <!-- Sweetness, Type, Roast, and Add fields conditionally based on dishtype -->
+                                        <div
+                                            th:if="${Dishes.dishtype == 'tea' or Dishes.dishtype == 'coffee' or Dishes.dishtype == 'smoothie'}">
+                                            <label><b>Sweetness:</b></label>
+                                            <div class="radio-buttons">
+                                                <label><input type="radio" name="sweetness" value="0%" required>
+                                                    0%</label>
+                                                <label><input type="radio" name="sweetness" value="50%" required>
+                                                    50%</label>
+                                                <label><input type="radio" name="sweetness" value="100%" required>
+                                                    100%</label>
+                                            </div>
+                                        </div>
+                                        <div th:if="${Dishes.dishtype == 'tea' or Dishes.dishtype == 'coffee'}">
+                                            <label><b>Type:</b></label>
+                                            <div class="radio-buttons">
+                                                <label><input type="radio" name="type" value="Hot" required>
+                                                    Hot</label>
+                                                <label><input type="radio" name="type" value="Iced" required>
+                                                    Iced</label>
+                                                <label><input type="radio" name="type" value="Frappe" required>
+                                                    Frappe</label>
+                                            </div>
+                                        </div>
+                                        <div th:unless="${Dishes.dishtype == 'tea' or Dishes.dishtype == 'coffee'}">
+                                            <!-- Provide a default value for Roast when not applicable -->
+                                            <input type="hidden" name="type" value="None">
+                                        </div>
+                                        <div
+                                            th:unless="${Dishes.dishtype == 'tea' or Dishes.dishtype == 'coffee' or Dishes.dishtype == 'smoothie'}">
+                                            <!-- Provide a default value for Roast when not applicable -->
+                                            <input type="hidden" name="sweetness" value="None">
+                                        </div>
+                                        <div th:if="${Dishes.dishtype == 'coffee'}">
+                                            <label><b>Roast:</b></label>
+                                            <div class="radio-buttons">
+                                                <label><input type="radio" name="roast" value="Light" required>
+                                                    Light</label>
+                                                <label><input type="radio" name="roast" value="Medium" required>
+                                                    Medium</label>
+                                                <label><input type="radio" name="roast" value="Dark" required>
+                                                    Dark</label>
+                                            </div>
+                                            <label for="add"><b>Add:</b></label>
+                                            <select name="add" id="add">
+                                                <option value="None">None</option>
+                                                <option value="Shot +฿10">Shot +฿10</option>
+                                            </select>
+                                        </div>
+                                        <div th:unless="${Dishes.dishtype == 'coffee'}">
+                                            <!-- Provide a default value for Roast when not applicable -->
+                                            <input type="hidden" name="roast" value="None">
+                                            <input type="hidden" name="add" value="None">
+                                        </div>
+                                        <br>
+                                        <label for="quantity"><b>Quantity:</b></label>
+                                        <br>
+                                        <div class="quantity-control">
+                                            <button type="button" class="btn btn-secondary quantity-button"
+                                                onclick="decrementCounter(this)">-</button>
+                                            <span class="form-control text-center quantity-display">1</span>
+                                            <button type="button" class="btn btn-secondary quantity-button"
+                                                onclick="incrementCounter(this)">+</button>
+                                            <input type="hidden" id="quantity" name="quantity" value="1">
+                                        </div>
+                                        <input class="btn btn-dark mt-3 mb-3 add-to-cart-button" type="submit"
+                                            value="Add to Cart">
+                                </form>
+                                <table>
+                                    <form action="#" th:action="@{/add-to-cart/{id}}" modelAttributes="newinvoiceitem"
+                                        method="post">
+                                        <form:input path="dish_name" value="1" type="text" />
+                                    </form>
+                                </table>
+                            </div>
+                        </div>
+                        <table>
+                            <form action="#" th:action="@{/add-to-cart/{id}}" modelAttributes="newinvoiceitem"
+                                method="post">
+                                <form:input path="dish_name" value="1" type="text" />
+                            </form>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+    <!-- show confirm/cancel InvoiceItem list -->
+    <div class="modal fade bd-example-modal-lg" id="status" tabindex="-1" role="dialog"
+        aria-labelledby="statusCartLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="statusLabel">Receipt</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-content">
+                    <div class="modal-body">
+
+                        <table class="table">
+                            <tr>
+                                <th>Invoice ID</th>
+                                <th>Total price</th>
+                                <th>User</th>
+                                <th>UserNote</th>
+                                <th>dishes</th>
+                                <th>dishAmount</th>
+                                <th>Note</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr th:each="InvoiceItem : ${invoiceitemByStatus}">
+                                <td th:text="${InvoiceItem.invoice.id}"></td>
+                                <td th:text="${InvoiceItem.invoice.payment.pay_total}"></td>
+                                <td th:text="${InvoiceItem.invoice.user.userName}"></td>
+                                <td th:text="${InvoiceItem.invoice.invoice_note}"></td>
+                                <td th:text="${InvoiceItem.dishes.dish_name}"></td>
+                                <td th:text="${InvoiceItem.dishAmount}"></td>
+                                <td th:text="${InvoiceItem.itemNote}"></td>
+                                <td th:text="${InvoiceItem.itemStatus}"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Bootstrap JS and Popper.js for Bootstrap functionality -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!--java script here -->
+    <script src="app.js"></script>
+</body>
+
+</html>
